@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 @Component
 public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
-    @Value("classpath:/view/main.fxml")
+    @Value("classpath:/view/menu.fxml")
     private Resource fxml;
     private final ApplicationContext context;
 
@@ -25,14 +25,12 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     public void onApplicationEvent(StageReadyEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(fxml.getURL());
-            
-            // ESSENCIAL: Faz o Spring gerenciar os Controllers do JavaFX
             fxmlLoader.setControllerFactory(context::getBean);
             
             Parent parent = fxmlLoader.load();
             Stage stage = event.getStage();
-            stage.setScene(new Scene(parent, 400, 300));
-            stage.setTitle("Sistema de Cadastro - JavaFX + Spring");
+            stage.setScene(new Scene(parent, 600, 400));
+            stage.setTitle("Sistema de Gestão - Menu Principal");
             stage.show();
         } catch (Exception e) {
             throw new RuntimeException("Erro ao carregar o FXML", e);
