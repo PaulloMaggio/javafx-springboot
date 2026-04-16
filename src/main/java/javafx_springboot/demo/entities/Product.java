@@ -1,11 +1,6 @@
 package javafx_springboot.demo.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -27,14 +22,19 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Double price;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
     public Product() {
     }
 
-    public Product(Long id, String name, String description, Double price) {
+    public Product(Long id, String name, String description, Double price, Department department) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.department = department;
     }
 
     public Long getId() {
@@ -58,7 +58,7 @@ public class Product implements Serializable {
     }
 
     public void setDescription(String description) {
-    	this.description = description;
+        this.description = description;
     }
 
     public Double getPrice() {
@@ -67,6 +67,14 @@ public class Product implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     @Override

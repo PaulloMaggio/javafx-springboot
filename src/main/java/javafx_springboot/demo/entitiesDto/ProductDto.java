@@ -4,4 +4,5 @@ public class ProductDto {
     public String name;
     public String description;
     public Double price;
+    public Long departmentId;
 }
