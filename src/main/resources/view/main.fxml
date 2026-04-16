@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" prefHeight="650.0" prefWidth="850.0" spacing="20.0" 
+      xmlns="http://javafx.com/javafx/21" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="javafx_springboot.demo.controllers.ProductController">
+    
+    <padding>
+        <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+    </padding>
+    
+    <children>
+        <!-- Título -->
+        <Label text="Product Management">
+            <font>
+                <Font name="System Bold" size="26.0" />
+            </font>
+        </Label>
+        
+        <!-- Formulário -->
+        <VBox spacing="12.0" style="-fx-background-color: #f4f4f4; -fx-padding: 20; -fx-background-radius: 12;">
+            <children>
+                <TextField fx:id="txtName" promptText="Product Name" />
+                <TextField fx:id="txtDescription" promptText="Description" />
+                <TextField fx:id="txtPrice" promptText="Price (Ex: 150.00)" />
+                <Button fx:id="btnSave" maxWidth="Infinity" onAction="#onBtnSaveAction" 
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" 
+                        text="Save Product" />
+            </children>
+        </VBox>
+
+        <!-- Tabela com rolagem automática -->
+        <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn fx:id="columnId" minWidth="60.0" prefWidth="80.0" text="ID" />
+            <TableColumn fx:id="columnName" minWidth="140.0" prefWidth="220.0" text="Name" />
+            <TableColumn fx:id="columnDescription" minWidth="200.0" prefWidth="340.0" text="Description" />
+            <TableColumn fx:id="columnPrice" minWidth="100.0" prefWidth="130.0" text="Price" />
+          </columns>
+          <columnResizePolicy>
+             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+          </columnResizePolicy>
+        </TableView>
+        
+        <!-- Botão Refresh -->
+        <Button maxWidth="Infinity" onAction="#loadProducts" 
+                style="-fx-font-size: 14px;" 
+                text="Refresh List" />
+    </children>
+</VBox>
