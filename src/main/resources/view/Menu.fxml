@@ -8,51 +8,51 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" spacing="25.0" style="-fx-background-color: #F4F7F9; -fx-border-color: #DCE3E8; -fx-border-width: 2; -fx-border-radius: 15; -fx-background-radius: 15;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx_springboot.demo.controllers.MenuController">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="850.0" spacing="25.0" style="-fx-background-color: #F4F7F9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx_springboot.demo.controllers.MenuController">
    <children>
       <VBox alignment="CENTER" spacing="5.0">
          <children>
-            <Label text="DASHBOARD" textFill="#7F8C8D">
+            <Label text="SISTEMA DE GESTÃO" textFill="#7F8C8D">
                <font>
-                  <Font name="System Bold" size="14.0" />
+                  <Font name="Segoe UI Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Gestão de Inventário" textFill="#2C3E50">
+            <Label text="Dashboard Administrativo" textFill="#2C3E50">
                <font>
-                  <Font name="Segoe UI Bold" size="30.0" />
+                  <Font name="Segoe UI Bold" size="32.0" />
                </font>
             </Label>
          </children>
          <VBox.margin>
-            <Insets bottom="20.0" />
+            <Insets bottom="30.0" />
          </VBox.margin>
       </VBox>
       
-      <Button fx:id="btnProduct" minWidth="280.0" onAction="#onBtnProductAction" prefHeight="55.0" style="-fx-background-color: #2C3E50; -fx-text-fill: white; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 30; -fx-cursor: hand;" text="📦 CADASTRO DE PRODUTOS">
+      <Button fx:id="btnProduct" minWidth="300.0" onAction="#onBtnProductAction" prefHeight="60.0" style="-fx-background-color: #2C3E50; -fx-text-fill: white; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-cursor: hand;" text="📦 GESTÃO DE PRODUTOS">
          <effect>
-            <DropShadow height="15.0" radius="7.0" width="15.0">
+            <DropShadow height="10.0" radius="4.5" width="10.0">
                <color>
-                  <Color opacity="0.2" />
+                  <Color opacity="0.15" />
                </color>
             </DropShadow>
          </effect>
       </Button>
       
-      <Button fx:id="btnDepartment" minWidth="280.0" onAction="#onBtnDepartmentAction" prefHeight="55.0" style="-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 30; -fx-cursor: hand;" text="🏢 DEPARTAMENTOS">
+      <Button fx:id="btnDepartment" minWidth="300.0" onAction="#onBtnDepartmentAction" prefHeight="60.0" style="-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-cursor: hand;" text="🏢 DEPARTAMENTOS">
          <effect>
-            <DropShadow height="15.0" radius="7.0" width="15.0">
+            <DropShadow height="10.0" radius="4.5" width="10.0">
                <color>
-                  <Color opacity="0.2" />
+                  <Color opacity="0.15" />
                </color>
             </DropShadow>
          </effect>
       </Button>
       
-      <Button fx:id="btnStock" minWidth="280.0" onAction="#onBtnStockAction" prefHeight="55.0" style="-fx-background-color: #16A085; -fx-text-fill: white; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 30; -fx-cursor: hand;" text="📊 VISUALIZAR ESTOQUE">
+      <Button fx:id="btnStock" minWidth="300.0" onAction="#onBtnStockAction" prefHeight="60.0" style="-fx-background-color: #16A085; -fx-text-fill: white; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-cursor: hand;" text="📊 CONTROLE DE ESTOQUE">
          <effect>
-            <DropShadow height="15.0" radius="7.0" width="15.0">
+            <DropShadow height="10.0" radius="4.5" width="10.0">
                <color>
-                  <Color opacity="0.2" />
+                  <Color opacity="0.15" />
                </color>
             </DropShadow>
          </effect>
@@ -60,14 +60,11 @@
       
       <Label text="Powered by Spring Boot &amp; JavaFX" textFill="#BDC3C7">
          <font>
-            <Font size="11.0" />
+            <Font name="Segoe UI" size="12.0" />
          </font>
          <VBox.margin>
-            <Insets top="30.0" />
+            <Insets top="50.0" />
          </VBox.margin>
       </Label>
    </children>
-   <padding>
-      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-   </padding>
 </VBox>
