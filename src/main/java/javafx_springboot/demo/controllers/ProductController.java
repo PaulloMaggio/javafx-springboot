@@ -17,10 +17,10 @@ import javafx_springboot.demo.services.DepartmentService;
 import javafx_springboot.demo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
@@ -28,34 +28,25 @@ public class ProductController implements Initializable {
 
     @Autowired
     private ProductService productService;
-
     @Autowired
     private DepartmentService departmentService;
 
-    @FXML
-    private TextField txtName;
-    @FXML
-    private TextField txtDescription;
-    @FXML
-    private TextField txtPrice;
-    @FXML
-    private ComboBox<Department> comboDepartment;
-
-    @FXML
-    private TableView<Product> tableView;
-    @FXML
-    private TableColumn<Product, Long> columnId;
-    @FXML
-    private TableColumn<Product, String> columnName;
-    @FXML
-    private TableColumn<Product, String> columnDescription;
-    @FXML
-    private TableColumn<Product, Double> columnPrice;
-    @FXML
-    private TableColumn<Product, String> columnDepartment;
+    @FXML private TextField txtName;
+    @FXML private TextField txtDescription;
+    @FXML private TextField txtPrice;
+    @FXML private ComboBox<Department> comboDepartment;
+    @FXML private Button btnDelete;
+    @FXML private Button btnSave;
+    @FXML private TableView<Product> tableView;
+    @FXML private TableColumn<Product, Long> columnId;
+    @FXML private TableColumn<Product, String> columnName;
+    @FXML private TableColumn<Product, String> columnDescription;
+    @FXML private TableColumn<Product, Double> columnPrice;
+    @FXML private TableColumn<Product, String> columnDepartment;
 
     private ObservableList<Product> obsList = FXCollections.observableArrayList();
     private ObservableList<Department> obsDept = FXCollections.observableArrayList();
+    private Product selectedProduct;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -63,7 +54,6 @@ public class ProductController implements Initializable {
         columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
         columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         columnDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
-        
         formatPriceColumn();
         initializeComboBoxDepartment();
         loadProducts();
@@ -73,31 +63,21 @@ public class ProductController implements Initializable {
     private void formatPriceColumn() {
         columnPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        columnPrice.setCellFactory(tc -> new TableCell<Product, Double>() {
+        columnPrice.setCellFactory(tc -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
-                if (empty || price == null) {
-                    setText(null);
-                } else {
-                    setText(currencyFormat.format(price));
-                }
+                if (empty || price == null) setText(null);
+                else setText(currencyFormat.format(price));
             }
         });
     }
 
     private void initializeComboBoxDepartment() {
-        StringConverter<Department> converter = new StringConverter<>() {
-            @Override
-            public String toString(Department d) {
-                return d == null ? null : d.getName();
-            }
-            @Override
-            public Department fromString(String string) {
-                return null;
-            }
-        };
-        comboDepartment.setConverter(converter);
+        comboDepartment.setConverter(new StringConverter<>() {
+            @Override public String toString(Department d) { return d == null ? null : d.getName(); }
+            @Override public Department fromString(String string) { return null; }
+        });
     }
 
     @FXML
@@ -107,29 +87,53 @@ public class ProductController implements Initializable {
                 showAlert("Erro", "Selecione um departamento", Alert.AlertType.WARNING);
                 return;
             }
-
             ProductDto dto = new ProductDto();
             dto.name = txtName.getText();
             dto.description = txtDescription.getText();
             dto.price = Double.parseDouble(txtPrice.getText().replace(",", "."));
             dto.departmentId = comboDepartment.getSelectionModel().getSelectedItem().getId();
 
-            productService.salva(dto);
-            
+            if (selectedProduct == null) {
+                productService.salva(dto);
+                showAlert("Sucesso", "Produto cadastrado!", Alert.AlertType.INFORMATION);
+            } else {
+                productService.atualiza(selectedProduct.getId(), dto);
+                showAlert("Sucesso", "Produto atualizado!", Alert.AlertType.INFORMATION);
+            }
             loadProducts();
             clearFields();
-            showAlert("Sucesso", "Produto salvo com sucesso!", Alert.AlertType.INFORMATION);
-        } catch (NumberFormatException e) {
-            showAlert("Erro", "Formato de preço inválido", Alert.AlertType.ERROR);
         } catch (Exception e) {
-            showAlert("Erro", e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erro", "Verifique os dados: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
-    public void onBtnBackAction(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
+    public void onBtnDeleteAction() {
+        if (selectedProduct != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmação");
+            alert.setHeaderText("Excluir Produto");
+            alert.setContentText("Deseja excluir: " + selectedProduct.getName() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                productService.deleta(selectedProduct.getId());
+                loadProducts();
+                clearFields();
+            }
+        }
+    }
+
+    @FXML
+    public void onTableMouseClicked() {
+        selectedProduct = tableView.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null) {
+            txtName.setText(selectedProduct.getName());
+            txtDescription.setText(selectedProduct.getDescription());
+            txtPrice.setText(String.valueOf(selectedProduct.getPrice()));
+            comboDepartment.getSelectionModel().select(selectedProduct.getDepartment());
+            btnDelete.setVisible(true);
+            btnSave.setText("ATUALIZAR");
+        }
     }
 
     @FXML
@@ -148,7 +152,16 @@ public class ProductController implements Initializable {
         txtDescription.clear();
         txtPrice.clear();
         comboDepartment.getSelectionModel().clearSelection();
+        selectedProduct = null;
+        btnDelete.setVisible(false);
+        btnSave.setText("SALVAR");
         txtName.requestFocus();
+    }
+
+    @FXML
+    public void onBtnBackAction(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {
