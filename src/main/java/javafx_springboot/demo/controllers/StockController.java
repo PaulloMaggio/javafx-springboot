@@ -10,7 +10,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx_springboot.demo.entities.Department;
 import javafx_springboot.demo.entities.Product;
+import javafx_springboot.demo.services.DepartmentService;
 import javafx_springboot.demo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,14 +28,16 @@ public class StockController implements Initializable {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private DepartmentService departmentService;
 
     @FXML private TextField txtSearch;
+    @FXML private ComboBox<Department> comboDeptFilter;
     @FXML private TableView<Product> tableView;
     @FXML private TableColumn<Product, Long> columnId;
     @FXML private TableColumn<Product, String> columnName;
     @FXML private TableColumn<Product, String> columnDepartment;
     @FXML private TableColumn<Product, Double> columnPrice;
-    
     @FXML private Label lblTotalItems;
     @FXML private Label lblTotalValue;
 
@@ -47,6 +52,7 @@ public class StockController implements Initializable {
         columnDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
         
         formatPriceColumn();
+        setupDeptCombo();
         loadStock();
     }
 
@@ -56,13 +62,18 @@ public class StockController implements Initializable {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
-                if (empty || price == null) {
-                    setText(null);
-                } else {
-                    setText(currencyFormat.format(price));
-                }
+                if (empty || price == null) setText(null);
+                else setText(currencyFormat.format(price));
             }
         });
+    }
+
+    private void setupDeptCombo() {
+        comboDeptFilter.setConverter(new StringConverter<>() {
+            @Override public String toString(Department d) { return d == null ? "Todos os Departamentos" : d.getName(); }
+            @Override public Department fromString(String string) { return null; }
+        });
+        comboDeptFilter.setItems(FXCollections.observableArrayList(departmentService.buscaTodos()));
     }
 
     @FXML
@@ -74,13 +85,25 @@ public class StockController implements Initializable {
     }
 
     @FXML
-    public void onTxtSearchKeyReleased() {
-        String filter = txtSearch.getText().toLowerCase();
+    public void updateFilters() {
+        String nameFilter = txtSearch.getText() == null ? "" : txtSearch.getText().toLowerCase();
+        Department selectedDept = comboDeptFilter.getValue();
+
         filteredData.setPredicate(product -> {
-            if (filter == null || filter.isEmpty()) return true;
-            return product.getName().toLowerCase().contains(filter);
+            boolean matchesName = nameFilter.isEmpty() || product.getName().toLowerCase().contains(nameFilter);
+            boolean matchesDept = (selectedDept == null) || 
+                                 (product.getDepartment() != null && product.getDepartment().getId().equals(selectedDept.getId()));
+            
+            return matchesName && matchesDept;
         });
         updateTotals();
+    }
+
+    @FXML
+    public void clearFilters() {
+        txtSearch.clear();
+        comboDeptFilter.setValue(null);
+        updateFilters();
     }
 
     private void updateTotals() {

@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -34,8 +35,15 @@
         <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #DCE3E8; -fx-border-radius: 10;">
             <children>
                 <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                    <Label text="Filtrar por nome do produto" textFill="#34495E" />
-                    <TextField fx:id="txtSearch" onKeyReleased="#onTxtSearchKeyReleased" prefHeight="35.0" promptText="Digite para buscar..." style="-fx-background-radius: 5;" />
+                    <Label text="Filtrar por nome" textFill="#34495E" />
+                    <TextField fx:id="txtSearch" onKeyReleased="#updateFilters" prefHeight="35.0" promptText="Digite o nome..." style="-fx-background-radius: 5;" />
+                </VBox>
+                <VBox spacing="5.0" prefWidth="250.0">
+                    <Label text="Filtrar por Departamento" textFill="#34495E" />
+                    <ComboBox fx:id="comboDeptFilter" onAction="#updateFilters" prefHeight="35.0" prefWidth="250.0" promptText="Todos os Departamentos" style="-fx-background-radius: 5;" />
+                </VBox>
+                <VBox alignment="BOTTOM_CENTER">
+                    <Button onAction="#clearFilters" prefHeight="35.0" style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-background-radius: 5;" text="LIMPAR" />
                 </VBox>
             </children>
         </HBox>
@@ -56,7 +64,7 @@
             <children>
                 <VBox>
                     <children>
-                        <Label text="ITENS TOTAIS" textFill="#BDC3C7">
+                        <Label text="ITENS NA VISUALIZAÇÃO" textFill="#BDC3C7">
                             <font> <Font name="Segoe UI" size="12.0" /> </font>
                         </Label>
                         <Label fx:id="lblTotalItems" text="0" textFill="WHITE">
@@ -66,7 +74,7 @@
                 </VBox>
                 <VBox>
                     <children>
-                        <Label text="VALOR TOTAL EM ESTOQUE" textFill="#BDC3C7">
+                        <Label text="SOMA PARCIAL (FILTRADA)" textFill="#BDC3C7">
                             <font> <Font name="Segoe UI" size="12.0" /> </font>
                         </Label>
                         <Label fx:id="lblTotalValue" text="R$ 0,00" textFill="#16A085">
